@@ -9,7 +9,7 @@ from flask import send_file, request
 import io
 
 
-from flask import Flask, request, jsonify, send_file, send_from_directory
+from flask import Flask, request, jsonify, send_file, send_from_directory, render_template
 from flask_cors import CORS
 from datetime import datetime
 import psycopg2
@@ -18,15 +18,14 @@ import os
 DATABASE_URL = os.getenv("DATABASE_URL")
 GEMINI_API_KEY = os.getenv('GEMINI_API_KEY')
 
-app = Flask(__name__, static_folder='static')
-CORS(app)
+app = Flask(__name__)
 
 # --- Conexión a PostgreSQL ---
 DATABASE_URL = os.environ.get("DATABASE_URL")
 
 @app.route("/")
 def home():
-    return send_from_directory('.', 'index.html')
+    return render_template("index.html")
 
 # --- Endpoint para generar cuento ---
 @app.route("/generate", methods=["POST"])
