@@ -1,0 +1,331 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Dulcles Sueños IA</title>
+  <style>
+    *{box-sizing:border-box;margin:0;padding:0}
+    html,body{height:100%}
+    body{
+      font-family: 'Poppins', system-ui, -apple-system, 'Segoe UI', Roboto, 'Helvetica Neue', Arial;
+      background: linear-gradient(135deg,#FFF7F2 0%, #F0F8FF 100%);
+      color:#243142;
+      display:flex;align-items:center;justify-content:center;padding:24px;
+    }
+
+    .card{
+      width:100%;max-width:980px;background:linear-gradient(180deg, rgba(255,255,255,0.9), rgba(255,255,255,0.75));
+      border-radius:20px;padding:28px;box-shadow:0 10px 30px rgba(36,49,66,0.12);
+      display:grid;grid-template-columns:380px 1fr;gap:20px;align-items:start;
+    }
+
+    .left{padding:12px}
+    .brand{display:flex;align-items:center;gap:14px}
+    .logo{
+      width:72px;height:72px;border-radius:18px;display:flex;align-items:center;justify-content:center;
+      background:radial-gradient(circle at 30% 30%, #FFD9E0, #FFC3A6);font-weight:700;font-size:22px;color:#6B2E6D;
+      box-shadow:0 6px 14px rgba(107,46,109,0.12)
+    }
+    h1{font-size:22px;margin-top:8px}
+    p.lead{margin-top:8px;color:#556;font-size:14px}
+
+    label{display:block;font-weight:600;margin-top:12px;font-size:13px}
+    .input, textarea, select{width:100%;padding:10px;border-radius:10px;border:1px solid rgba(36,49,66,0.08);margin-top:6px;font-size:14px}
+    textarea{min-height:120px;resize:vertical}
+
+    .characters{display:flex;gap:8px;margin-top:8px;flex-wrap:wrap}
+    .char-btn{background:#fff;border-radius:12px;padding:8px 10px;border:1px solid rgba(36,49,66,0.06);cursor:pointer;display:flex;align-items:center;gap:8px}
+    .char-btn.selected{outline:3px solid rgba(255,183,77,0.25)}
+
+    .btn-primary{margin-top:14px;background:linear-gradient(90deg,#FFB86C,#FF7FB3);border:none;color:white;padding:12px 16px;border-radius:12px;font-weight:700;cursor:pointer;font-size:16px}
+    .btn-ghost{margin-left:8px;background:transparent;border:1px solid rgba(36,49,66,0.06);padding:10px;border-radius:10px;cursor:pointer}
+
+    .right{padding:12px;background:linear-gradient(180deg,#FFFFFF, #FFF9FB);border-radius:12px;min-height:320px}
+    .story-box{white-space:pre-wrap;font-size:16px;line-height:1.45;padding:16px;border-radius:12px;border:1px dashed rgba(36,49,66,0.06);min-height:400px;background:linear-gradient(180deg,rgba(255,255,255,0.6), rgba(255,255,255,0.4));overflow-y: auto;max-height: 400px;}
+
+    .meta{margin-top:10px;display:flex;align-items:center;gap:12px}
+    .small{font-size:13px;color:#667}
+    .loader{display:inline-block;width:18px;height:18px;border-radius:50%;border:3px solid rgba(0,0,0,0.08);border-top-color:#FF7FB3;animation:spin 1s linear infinite}
+    @keyframes spin{to{transform:rotate(360deg)}}
+
+    footer{grid-column:1/-1;margin-top:14px;color:#666;font-size:13px;text-align:right}
+
+    @media (max-width:900px){
+      .card{grid-template-columns:1fr;}
+      .left,.right{padding:8px}
+    }
+  </style>
+</head>
+<body>
+  <div class="card" role="application" aria-labelledby="app-title">
+    <div class="left">
+      <div class="brand">
+        <div class="logo">DS</div>
+        <div>
+          <h1 id="app-title">Dulces Sueños IA</h1>
+          <p class="lead">Cuentos para dormir — elige tema, personaje y da al botón.</p>
+        </div>
+      </div>
+
+      <label for="theme">¿De qué quieres que te lea hoy?</label>
+      <input id="theme" class="input" placeholder="Ej: un dragón que quiere aprender a bailar" />
+
+      <label for="character">Personaje (elige o escribe uno)</label>
+      <div class="characters" id="characters">
+        <button class="char-btn" data-char="Luna la conejita">🐰 Luna</button>
+        <button class="char-btn" data-char="Tito el dragón">🐉 Tito</button>
+        <button class="char-btn" data-char="Pipo el astronauta">🚀 Pipo</button>
+        <button class="char-btn" data-char="Mila la sirena">🧜 Mila</button>
+      </div>
+      <input id="characterInput" class="input" placeholder="O escribe un personaje" />
+
+      <label for="tone">Tono</label>
+      <select id="tone" class="input">
+        <option value="dulce">Dulce</option>
+        <option value="gracioso">Gracioso</option>
+        <option value="aventurero">Aventurero</option>
+        <option value="sueño tranquilo">Sueño tranquilo</option>
+      </select>
+
+      <div style="display:flex;align-items:center;gap:8px;margin-top:12px">
+        <button id="generateBtn" class="btn-primary" aria-live="polite">Contar</button>
+        <button id="ttsBtn" class="btn-ghost" title="Escuchar" disabled>🔊 Escuchar</button>
+        <button id="clearBtn" class="btn-ghost">Limpiar</button>
+      </div>
+
+    </div>
+
+    <div class="right">
+      <div class="story-box" id="storyBox">Aquí aparecerá el cuento...</div>
+      
+      <div id="status" style="margin-top:8px;color:#333"></div>
+      <div id="wordCount" style="margin-top:4px;color:#555">Palabras: —</div>
+      
+      <div style="margin-top:10px;display:flex;gap:8px;align-items:center">
+        <button id="saveBtn" class="btn-ghost">Guardar</button>
+      </div>
+    </div>
+
+    <footer>Hecho con 💜 — Proyecto Cuentos</footer>
+  </div>
+
+  <script>
+    // --- Utilidades y estado ---
+    const charactersEl = document.getElementById('characters');
+    const themeEl = document.getElementById('theme');
+    const characterInputEl = document.getElementById('characterInput');
+    const toneEl = document.getElementById('tone');
+    const generateBtn = document.getElementById('generateBtn');
+    const storyBox = document.getElementById('storyBox');
+    const wordCountEl = document.getElementById('wordCount');
+    const ttsBtn = document.getElementById('ttsBtn');
+    const statusEl = document.getElementById('status');
+    const saveBtn = document.getElementById('saveBtn');
+    const historyBtn = document.getElementById('historyBtn');
+    const clearBtn = document.getElementById('clearBtn'); // ✅ Definir botón antes de usar
+
+    const USER_ID_KEY = 'cc_user_id_v1';
+    function getOrCreateUserId(){
+      let id = localStorage.getItem(USER_ID_KEY);
+      if(!id){ id = 'user_' + Math.random().toString(36).slice(2,10); localStorage.setItem(USER_ID_KEY,id); }
+      return id;
+    }
+    const USER_ID = getOrCreateUserId();
+
+    // seleccionar personaje visual
+    charactersEl.addEventListener('click', (e)=>{
+      const btn = e.target.closest('.char-btn');
+      if(!btn) return;
+      document.querySelectorAll('.char-btn').forEach(b=>b.classList.remove('selected'));
+      btn.classList.add('selected');
+      characterInputEl.value = btn.dataset.char;
+    });
+
+    function setLoading(on){
+      if(on){
+          generateBtn.disabled = true;
+          generateBtn.innerHTML = '<span class="loader"></span> Contando...';
+          statusEl.innerHTML = '';
+      } else {
+          generateBtn.disabled = false;
+          generateBtn.innerHTML = 'Contar';
+      }
+    }
+
+    function countWords(text){
+      if(!text) return 0;
+      return text.trim().split(/\s+/).filter(Boolean).length;
+    }
+
+    function speakText(text){
+      if(!('speechSynthesis' in window)) return alert('TTS no soportado');
+      window.speechSynthesis.cancel();
+      const utter = new SpeechSynthesisUtterance(text);
+      utter.rate = 0.95; utter.pitch = 1;
+      window.speechSynthesis.speak(utter);
+    }
+
+    ttsBtn.addEventListener('click', ()=>{ speakText(storyBox.innerText); });
+
+    // Generar cuento -> llama a la API (Flask)
+    async function generateStory(){
+      const theme = themeEl.value.trim();
+      const character = characterInputEl.value.trim() || 'Un personaje amigable';
+      const tone = toneEl.value;
+
+      if(!theme){ 
+          alert('Dime de qué quieres el cuento (tema).'); 
+          themeEl.focus(); 
+          return; 
+      }
+
+      setLoading(true);
+      wordCountEl.textContent = 'Palabras: —';
+      ttsBtn.disabled = true;
+
+      try{
+          const payload = { 
+              tema: theme, 
+              personaje: character, 
+              tono: tone, 
+              userId: USER_ID 
+          };
+
+          const res = await fetch('http://localhost:5000/generate', {
+              method: 'POST',
+              headers: {'Content-Type':'application/json'},
+              body: JSON.stringify(payload)
+          });
+
+          if(!res.ok){
+              const txt = await res.text(); 
+              throw new Error('Error servidor: '+res.status+' '+txt);
+          }
+
+          const data = await res.json();
+          const story = data.cuento || '';
+
+          storyBox.textContent = story;
+          storyBox.scrollTop = 0;
+
+          const wc = countWords(story);
+          wordCountEl.textContent = 'Palabras: ' + wc;
+          ttsBtn.disabled = !story;
+          statusEl.innerHTML = 'Generado ✓';
+
+          // Guardar última interacción
+          const last = { 
+              id: data.id || null, 
+              tema: theme, 
+              personaje: character, 
+              tono: tone, 
+              story, 
+              words: wc, 
+              created_at: new Date().toISOString() 
+          };
+          localStorage.setItem('cc_last_interaction', JSON.stringify(last));
+          
+          await saveStory(story, theme, character, tone);
+
+
+      } catch(err){
+          console.error(err);
+          statusEl.innerHTML = '<span style="color:#c33">Error</span>';
+          storyBox.textContent = 'Ha ocurrido un error: ' + err.message;
+      } finally { 
+          setLoading(false); 
+      }
+    }
+
+    async function saveStory(story, theme, character, tone) {
+      try {
+        await fetch('http://localhost:5000/save_iteration', {
+          method: 'POST',
+          headers: {'Content-Type':'application/json'},
+          body: JSON.stringify({
+            userId: USER_ID,
+            personaje: character,
+            tema: theme,
+            tono: tone,
+            cuento: story
+          })
+        });
+      } catch(e){
+        console.warn("No se pudo guardar la interacción:", e);
+      }
+    }
+
+    saveBtn.addEventListener('click', async () => {
+      const story = storyBox.innerText.trim();
+      if (!story) return alert('No hay cuento para guardar');
+
+      const theme = themeEl.value.trim();
+      const character = characterInputEl.value.trim();
+      const tone = toneEl.value;
+
+      try {
+        const res = await fetch('http://localhost:5000/download_pdf', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ theme, character, tone, story })
+        });
+
+        if (!res.ok) throw new Error('Error al generar PDF');
+
+        const blob = await res.blob();
+        const url = window.URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = `cuento_${theme.replace(/ /g, "_")}_${Date.now()}.pdf`;
+        document.body.appendChild(a);
+        a.click();
+        a.remove();
+        window.URL.revokeObjectURL(url);
+
+      } catch (err) {
+        console.error(err);
+        alert('Error generando el PDF: ' + err.message);
+      }
+    });
+
+
+    clearBtn.addEventListener('click', () => {
+      storyBox.textContent = 'Aquí aparecerá el cuento...';
+      wordCountEl.textContent = 'Palabras: —';
+      ttsBtn.disabled = true;
+      storyBox.scrollTop = 0;
+      // deselect characters
+      document.querySelectorAll('.char-btn').forEach(b=>b.classList.remove('selected'));
+      characterInputEl.value = '';
+      statusEl.innerHTML = '';
+    });
+
+    generateBtn.addEventListener('click', generateStory);
+
+    historyBtn.addEventListener('click', ()=>{
+      const local = JSON.parse(localStorage.getItem('cc_history_v1')||'[]');
+      let msg = '';
+      if(local.length) msg += 'Historial local:\n' + local.slice(0,6).map(h=>`${h.created_at} — ${h.theme} — ${h.character.substring(0,30)}...`).join('\n');
+      else msg += 'No hay historial local.';
+      alert(msg);
+    });
+
+    (function restore(){
+      const last = JSON.parse(localStorage.getItem('cc_last_interaction')||'null');
+      if(last){ 
+        themeEl.value = last.theme || ''; 
+        characterInputEl.value = last.character || ''; 
+        toneEl.value = last.tone || 'dulce'; 
+        storyBox.textContent = last.story || 'Aquí aparecerá el cuento...'; 
+        wordCountEl.textContent = 'Palabras: ' + (last.words||0); 
+        ttsBtn.disabled = !last.story; 
+      }
+    })();
+
+    document.addEventListener('keydown', (e)=>{ 
+      if((e.ctrlKey||e.metaKey) && e.key==='Enter'){ generateStory(); } 
+    });
+  </script>
+</body>
+</html>
