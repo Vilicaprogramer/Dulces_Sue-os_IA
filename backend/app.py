@@ -9,7 +9,7 @@ from flask import send_file, request
 import io
 
 
-from flask import Flask, request, jsonify, send_file
+from flask import Flask, request, jsonify, send_file, send_from_directory
 from flask_cors import CORS
 from datetime import datetime
 import psycopg2
@@ -157,4 +157,6 @@ def download_pdf():
 
 
 if __name__ == "__main__":
-    app.run(host="0.0.0.0", port=5000, debug=True)
+    port = int(os.environ.get("PORT", 5000))
+    app.run(host="0.0.0.0", port=port)
+
