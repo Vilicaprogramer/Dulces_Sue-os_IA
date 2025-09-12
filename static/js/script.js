@@ -102,7 +102,7 @@
 
     try{
       const payload = { tema: theme, personaje: character, tono: tone};
-      const res = await fetch('http://localhost:5000/generate', {
+      const res = await fetch('/generate', {
         method: 'POST',
         headers: {'Content-Type':'application/json'},
         body: JSON.stringify(payload)
@@ -140,7 +140,7 @@
 
   async function saveStory(story, theme, character, tone) {
     try {
-      await fetch('http://localhost:5000/save_iteration', {
+      await fetch('/save_iteration', {
         method: 'POST',
         headers: {'Content-Type':'application/json'},
         body: JSON.stringify({personaje: character, tema: theme, tono: tone, cuento: story })
@@ -158,7 +158,7 @@
     const character = characterInputEl.value.trim();
     const tone = toneEl.value;
     try {
-      const res = await fetch('http://localhost:5000/download_pdf', {
+      const res = await fetch('/download_pdf', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ theme, character, tone, story })

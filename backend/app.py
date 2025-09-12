@@ -18,37 +18,15 @@ import os
 DATABASE_URL = os.getenv("DATABASE_URL")
 GEMINI_API_KEY = os.getenv('GEMINI_API_KEY')
 
-app = Flask(__name__)
+app = Flask(__name__, static_folder='static')
 CORS(app)
 
 # --- Conexión a PostgreSQL ---
 DATABASE_URL = os.environ.get("DATABASE_URL")
 
-'''def get_conn():
-    return psycopg2.connect(DATABASE_URL)'''
-
-'''def init_db():
-    conn = get_conn()
-    c = conn.cursor()
-    c.execute("""
-        CREATE TABLE IF NOT EXISTS interacciones (
-            id SERIAL PRIMARY KEY,
-            user_id TEXT,
-            personaje TEXT,
-            tema TEXT,
-            tono TEXT,
-            cuento TEXT,
-            fecha_hora TIMESTAMP
-        )
-    """)
-    conn.commit()
-    conn.close()
-
-init_db()'''
-
 @app.route("/")
 def home():
-    return app.send_static_file("index.html")
+    return send_from_directory('.', 'index.html')
 
 # --- Endpoint para generar cuento ---
 @app.route("/generate", methods=["POST"])
