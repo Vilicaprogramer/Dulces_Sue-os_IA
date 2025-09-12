@@ -9,7 +9,7 @@ from flask import send_file, request
 import io
 
 
-from flask import Flask, request, jsonify, send_file, send_from_directory, render_template
+from flask import Flask, request, jsonify, send_file, send_from_directory
 from flask_cors import CORS
 from datetime import datetime
 import psycopg2
@@ -25,7 +25,7 @@ DATABASE_URL = os.environ.get("DATABASE_URL")
 
 @app.route("/")
 def home():
-    return render_template("index.html")
+    return send_from_directory('.', 'index.html')
 
 # --- Endpoint para generar cuento ---
 @app.route("/generate", methods=["POST"])
