@@ -1,0 +1,220 @@
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+  }
+
+  html, body {
+    height: 100%;
+  }
+
+  body {
+    font-family: 'Poppins', system-ui, -apple-system, 'Segoe UI', Roboto, 'Helvetica Neue', Arial;
+    background: url("..\\img\\Dulces_suenos_IA.png") no-repeat center center fixed;
+    background-size: cover;
+    color: #243142;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 12px;
+  }
+
+  .card {
+    width: 100%;
+    max-width: 980px;
+    background: linear-gradient(180deg, rgba(255,255,255,0.9), rgba(255,255,255,0.75));
+    border-radius: 20px;
+    padding: 20px;
+    box-shadow: 0 10px 30px rgba(36,49,66,0.12);
+    display: grid;
+    grid-template-columns: 380px 1fr;
+    gap: 20px;
+    align-items: start;
+  }
+
+  .left {
+    padding: 12px;
+  }
+
+  .brand {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+  }
+
+  .logo {
+    width: 72px;
+    height: 72px;
+    border-radius: 18px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: radial-gradient(circle at 30% 30%, #FFD9E0, #FFC3A6);
+    font-weight: 700;
+    font-size: 22px;
+    color: #6B2E6D;
+    box-shadow: 0 6px 14px rgba(107,46,109,0.12);
+  }
+
+  h1 {
+    font-size: 22px;
+    margin-top: 8px;
+  }
+
+  p.lead {
+    margin-top: 8px;
+    color: #556;
+    font-size: 14px;
+  }
+
+  label {
+    display: block;
+    font-weight: 600;
+    margin-top: 12px;
+    font-size: 13px;
+  }
+
+  .input, textarea, select {
+    width: 100%;
+    padding: 10px;
+    border-radius: 10px;
+    border: 1px solid rgba(36,49,66,0.08);
+    margin-top: 6px;
+    font-size: 14px;
+  }
+
+  textarea {
+    min-height: 120px;
+    resize: vertical;
+  }
+
+  .characters {
+    display: flex;
+    gap: 8px;
+    margin-top: 8px;
+    flex-wrap: wrap;
+  }
+
+  .char-btn {
+    background: #fff;
+    border-radius: 12px;
+    padding: 8px 10px;
+    border: 1px solid rgba(36,49,66,0.06);
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+
+  .char-btn.selected {
+    outline: 3px solid rgba(255,183,77,0.25);
+  }
+
+  .btn-primary {
+    margin-top: 14px;
+    background: linear-gradient(90deg,#FFB86C,#FF7FB3);
+    border: none;
+    color: white;
+    padding: 12px 16px;
+    border-radius: 12px;
+    font-weight: 700;
+    cursor: pointer;
+    font-size: 16px;
+  }
+
+  .btn-ghost {
+    margin-left: 8px;
+    background: transparent;
+    border: 1px solid rgba(36,49,66,0.06);
+    padding: 10px;
+    border-radius: 10px;
+    cursor: pointer;
+  }
+
+  .right {
+    padding: 12px;
+    background: linear-gradient(180deg,#FFFFFF, #FFF9FB);
+    border-radius: 12px;
+    min-height: 320px;
+    display: flex;
+    flex-direction: column;
+  }
+
+  .story-box {
+    white-space: pre-wrap;
+    font-size: 16px;
+    line-height: 1.45;
+    padding: 16px;
+    border-radius: 12px;
+    border: 1px dashed rgba(36,49,66,0.06);
+    min-height: 300px;
+    background: linear-gradient(180deg,rgba(255,255,255,0.6), rgba(255,255,255,0.4));
+    overflow-y: auto;
+    max-height: 400px;
+  }
+
+  .meta {
+    margin-top: 10px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+
+  .small {
+    font-size: 13px;
+    color: #667;
+  }
+
+  .loader {
+    display: inline-block;
+    width: 18px;
+    height: 18px;
+    border-radius: 50%;
+    border: 3px solid rgba(0,0,0,0.08);
+    border-top-color: #FF7FB3;
+    animation: spin 1s linear infinite;
+  }
+
+  @keyframes spin {
+    to { transform: rotate(360deg) }
+  }
+
+  footer {
+    grid-column: 1/-1;
+    margin-top: 14px;
+    color: #666;
+    font-size: 13px;
+    text-align: right;
+  }
+
+  /* 📱 Responsive */
+  @media (max-width: 900px) {
+    body {
+      padding: 8px;
+      align-items: flex-start;
+    }
+
+    .card {
+      grid-template-columns: 1fr;
+      padding: 16px;
+    }
+
+    .left, .right {
+      padding: 8px;
+    }
+
+    .left {
+      order: 1; /* Elecciones primero */
+    }
+
+    .right {
+      order: 2; /* Cuento después */
+      min-height: auto;
+      max-height: none;
+    }
+
+    .story-box {
+      min-height: 200px;
+      max-height: 300px;
+    }
+  }
