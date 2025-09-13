@@ -10,3 +10,6 @@ psycopg2-binary>=2.9.9
 
 # ReportLab para generar PDFs
 reportlab>=4.1.0
+
+# Gunicorn para instalar ne Render
+gunicorn
