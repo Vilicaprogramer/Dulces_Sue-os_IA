@@ -18,14 +18,16 @@ import os
 DATABASE_URL = os.getenv("DATABASE_URL")
 GEMINI_API_KEY = os.getenv('GEMINI_API_KEY')
 
-app = Flask(__name__, static_folder="../static")
-
-# --- Conexión a PostgreSQL ---
-DATABASE_URL = os.environ.get("DATABASE_URL")
+app = Flask(
+    __name__,
+    static_folder="../static",   
+    static_url_path=""           
+)
 
 @app.route("/")
 def home():
-    return send_from_directory('.', 'index.html')
+    # sirve /project-root/static/index.html
+    return send_from_directory(app.static_folder, "index.html")
 
 # --- Endpoint para generar cuento ---
 @app.route("/generate", methods=["POST"])
