@@ -10,7 +10,7 @@
 
   body {
     font-family: 'Poppins', system-ui, -apple-system, 'Segoe UI', Roboto, 'Helvetica Neue', Arial;
-    background: url("/static/img/Dulces_suenos_IA.png") no-repeat center center fixed;
+    background: url("/img/Dulces_suenos_IA.png") no-repeat center center fixed;
     background-size: cover;
     color: #243142;
     display: flex;
