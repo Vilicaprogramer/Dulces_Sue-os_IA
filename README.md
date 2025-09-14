@@ -95,4 +95,5 @@ La aplicación está desplegada en Render y puede utilizarse directamente desde 
 
 ## ✨ Autor
 
-Proyecto creado por [Vicente Limones](https://github.com/tu_usuario).
+Proyecto creado por [Vicente Limones](https://github.com/Vilicaprogramer).
+[Linkeding](www.linkedin.com/in/vicente-limones-cantero-3a167328a)[Portfoli personal](https://vilicaprogramer.github.io/Portfolio_HTML/)
