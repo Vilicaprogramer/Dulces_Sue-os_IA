@@ -95,4 +95,4 @@ La aplicación está desplegada en Render y puede utilizarse directamente desde 
 
 ## ✨ Autor
 
-Proyecto creado por [Tu Nombre](https://github.com/tu_usuario).
+Proyecto creado por [Vicente Limones](https://github.com/tu_usuario).
