@@ -21,3 +21,6 @@ EXPOSE 5000
 
 # Comando para accionar el contenedor
 CMD ["python", "app.py"]
+
+# Para correrlo desde cualquier ordenador
+# docker run -d -p 5000:5000 vilica/app-cuentos:latest
