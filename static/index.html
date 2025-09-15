@@ -1,15 +1,20 @@
 <!doctype html>
 <html lang="es">
 <head>
+  <!-- Configuración del documento y metadatos -->
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Dulces Sueños IA</title>
-<link rel="stylesheet" href="css/style.css" />
-
+  <!-- Vinculación de hoja de estilos CSS -->
+  <link rel="stylesheet" href="css/style.css" />
 </head>
+
 <body>
+  <!-- Contenedor principal de la aplicación con rol accesible -->
   <div class="card" role="application" aria-labelledby="app-title">
+    <!-- Sección izquierda: controles de usuario -->
     <div class="left">
+      <!-- Marca y logo de la app -->
       <div class="brand">
         <div class="logo">DS</div>
         <div>
@@ -18,18 +23,23 @@
         </div>
       </div>
 
+      <!-- Entrada de tema del cuento -->
       <label for="theme">¿De qué quieres que te lea hoy?</label>
       <input id="theme" class="input" placeholder="Ej: un dragón que quiere aprender a bailar" />
 
+      <!-- Selección de personaje -->
       <label for="character">Personaje (elige o escribe uno)</label>
       <div class="characters" id="characters">
+        <!-- Botones predefinidos de personajes -->
         <button class="char-btn" data-char="Luna la conejita">🐰 Luna</button>
         <button class="char-btn" data-char="Tito el dragón">🐉 Tito</button>
         <button class="char-btn" data-char="Pipo el astronauta">🚀 Pipo</button>
         <button class="char-btn" data-char="Mila la sirena">🧜 Mila</button>
       </div>
+      <!-- Entrada libre para escribir un personaje personalizado -->
       <input id="characterInput" class="input" placeholder="O escribe un personaje" />
 
+      <!-- Selección de tono del cuento -->
       <label for="tone">Tono</label>
       <select id="tone" class="input">
         <option value="dulce">Dulce</option>
@@ -38,34 +48,40 @@
         <option value="sueño tranquilo">Sueño tranquilo</option>
       </select>
 
+      <!-- Botones principales: generar, escuchar y limpiar -->
       <div style="display:flex;align-items:center;gap:8px;margin-top:12px">
         <button id="generateBtn" class="btn-primary" aria-live="polite">Contar</button>
         <button id="ttsBtn" class="btn-ghost" title="Escuchar" disabled>🔊 Escuchar</button>
         <button id="clearBtn" class="btn-ghost">Limpiar</button>
       </div>
 
+      <!-- Botones de control de reproducción de audio -->
       <div style="display:flex;align-items:center;gap:8px;margin-top:12px">
         <button id="pauseBtn" class="btn-ghost" disabled>⏸️ Pausar</button>
         <button id="resumeBtn" class="btn-ghost" disabled>⏯️ Reanudar</button>
         <button id="stopBtn" class="btn-ghost" disabled>⏹️ Detener</button>
       </div>
-
     </div>
 
+    <!-- Sección derecha: área de visualización del cuento -->
     <div class="right">
       <div class="story-box" id="storyBox">Aquí aparecerá el cuento...</div>
       
+      <!-- Estado y contador de palabras -->
       <div id="status" style="margin-top:8px;color:#333"></div>
       <div id="wordCount" style="margin-top:4px;color:#555">Palabras: —</div>
       
+      <!-- Botón para guardar el cuento -->
       <div style="margin-top:10px;display:flex;gap:8px;align-items:center">
         <button id="saveBtn" class="btn-ghost">Guardar</button>
       </div>
     </div>
 
+    <!-- Pie de página -->
     <footer>Hecho con 💜 — Proyecto Cuentos</footer>
   </div>
 
-<script src="js/script.js"></script>
+  <!-- Script de JavaScript de la aplicación -->
+  <script src="js/script.js"></script>
 </body>
 </html>

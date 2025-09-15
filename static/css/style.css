@@ -1,41 +1,47 @@
+/* --- Reset básico y box-sizing --- */
 * {
-    box-sizing: border-box;
+    box-sizing: border-box; /* Hace que padding y border se incluyan en el ancho/alto total */
     margin: 0;
     padding: 0;
   }
 
+  /* Altura completa para html y body */
   html, body {
     height: 100%;
   }
 
+  /* Estilo principal del body */
   body {
     font-family: 'Poppins', system-ui, -apple-system, 'Segoe UI', Roboto, 'Helvetica Neue', Arial;
-    background: url("/img/Dulces_suenos_IA.png") no-repeat center center fixed;
-    background-size: cover;
+    background: url("/img/Dulces_suenos_IA.png") no-repeat center center fixed; /* Imagen de fondo fija */
+    background-size: cover; /* Cubrir todo el viewport */
     color: #243142;
     display: flex;
-    align-items: center;
-    justify-content: center;
+    align-items: center; /* Centrar verticalmente */
+    justify-content: center; /* Centrar horizontalmente */
     padding: 12px;
   }
 
+  /* Contenedor principal estilo "tarjeta" */
   .card {
     width: 100%;
     max-width: 980px;
     background: linear-gradient(180deg, rgba(255,255,255,0.9), rgba(255,255,255,0.75));
     border-radius: 20px;
     padding: 20px;
-    box-shadow: 0 10px 30px rgba(36,49,66,0.12);
+    box-shadow: 0 10px 30px rgba(36,49,66,0.12);/* Sombra suave */
     display: grid;
-    grid-template-columns: 380px 1fr;
+    grid-template-columns: 380px 1fr;/* Dos columnas: izquierda (controles) y derecha (cuento) */
     gap: 20px;
     align-items: start;
   }
 
+  /* Sección izquierda: padding interno */
   .left {
     padding: 12px;
   }
 
+  /* Logo y marca de la app */
   .brand {
     display: flex;
     align-items: center;
@@ -56,6 +62,7 @@
     box-shadow: 0 6px 14px rgba(107,46,109,0.12);
   }
 
+  /* Títulos y subtítulos */
   h1 {
     font-size: 22px;
     margin-top: 8px;
@@ -67,6 +74,7 @@
     font-size: 14px;
   }
 
+  /* Labels de inputs */
   label {
     display: block;
     font-weight: 600;
@@ -83,16 +91,18 @@
     font-size: 14px;
   }
 
+  /* Inputs, textarea y selects */
   textarea {
     min-height: 120px;
-    resize: vertical;
+    resize: vertical;/* Permite cambiar altura, no ancho */
   }
 
+  /* Contenedor de botones de personajes */
   .characters {
     display: flex;
     gap: 8px;
     margin-top: 8px;
-    flex-wrap: wrap;
+    flex-wrap: wrap;/* Permite que se envuelvan en varias líneas si hay muchos */
   }
 
   .char-btn {
@@ -107,9 +117,10 @@
   }
 
   .char-btn.selected {
-    outline: 3px solid rgba(255,183,77,0.25);
+    outline: 3px solid rgba(255,183,77,0.25);/* Resalta personaje seleccionado */
   }
 
+  /* Botones principales */
   .btn-primary {
     margin-top: 14px;
     background: linear-gradient(90deg,#FFB86C,#FF7FB3);
@@ -131,6 +142,7 @@
     cursor: pointer;
   }
 
+  /* Sección derecha: área del cuento */
   .right {
     padding: 12px;
     background: linear-gradient(180deg,#FFFFFF, #FFF9FB);
@@ -140,8 +152,9 @@
     flex-direction: column;
   }
 
+  /* Caja donde se muestra el cuento */
   .story-box {
-    white-space: pre-wrap;
+    white-space: pre-wrap;/* Mantiene saltos de línea */
     font-size: 16px;
     line-height: 1.45;
     padding: 16px;
@@ -149,10 +162,11 @@
     border: 1px dashed rgba(36,49,66,0.06);
     min-height: 300px;
     background: linear-gradient(180deg,rgba(255,255,255,0.6), rgba(255,255,255,0.4));
-    overflow-y: auto;
+    overflow-y: auto;/* Scroll vertical si el contenido excede */
     max-height: 400px;
   }
 
+  /* Pequeños elementos de meta información */
   .meta {
     margin-top: 10px;
     display: flex;
@@ -165,6 +179,7 @@
     color: #667;
   }
 
+  /* Loader animado */
   .loader {
     display: inline-block;
     width: 18px;
@@ -176,26 +191,26 @@
   }
 
   @keyframes spin {
-    to { transform: rotate(360deg) }
+    to { transform: rotate(360deg) } /* Rotación completa para loader */
   }
 
   footer {
-    grid-column: 1/-1;
+    grid-column: 1/-1; /* Ocupa ambas columnas */
     margin-top: 14px;
     color: #666;
     font-size: 13px;
     text-align: right;
   }
 
-  /* 📱 Responsive */
+  /* --- Responsive para móviles --- */
   @media (max-width: 900px) {
     body {
       padding: 8px;
-      align-items: flex-start;
+      align-items: flex-start; /* No centra verticalmente, ajusta al top */
     }
 
     .card {
-      grid-template-columns: 1fr;
+      grid-template-columns: 1fr;/* Una sola columna */
       padding: 16px;
     }
 
@@ -215,6 +230,6 @@
 
     .story-box {
       min-height: 200px;
-      max-height: 300px;
+      max-height: 300px;/* Ajuste de tamaño en pantallas pequeñas */
     }
   }

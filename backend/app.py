@@ -15,21 +15,44 @@ from datetime import datetime
 import psycopg2
 import os
 
+# Configuración inicial de la aplicación Flask.
+# - Se obtienen las variables de entorno necesarias:
+#   DATABASE_URL: conexión a la base de datos PostgreSQL.
+#   GEMINI_API_KEY: clave de acceso a la API de Gemini.
 DATABASE_URL = os.getenv("DATABASE_URL")
 GEMINI_API_KEY = os.getenv('GEMINI_API_KEY')
 
+# - Se crea la aplicación Flask indicando:
+#   static_folder: ruta donde se encuentran los archivos estáticos (CSS, JS, imágenes).
+#   static_url_path: define cómo se accederá a esos archivos desde la URL raíz.
 app = Flask(
     __name__,
     static_folder="../static",   
     static_url_path=""           
 )
 
+# Ruta principal de la aplicación ("/").
+# - Cuando un usuario accede a la raíz de la web, Flask devuelve el archivo
+#   "index.html" que está dentro de la carpeta definida como estática.
+# - En este caso, la carpeta estática es "../static", por lo que servirá
+#   el archivo ubicado en /Dulces_Sue-os_IA/static/index.html.
 @app.route("/")
 def home():
     # sirve /project-root/static/index.html
     return send_from_directory(app.static_folder, "index.html")
 
 # --- Endpoint para generar cuento ---
+# Este endpoint recibe una solicitud POST en "/generate" con un JSON que debe incluir:
+#   - "personaje": protagonista del cuento
+#   - "tema": tema central o ambientación
+#   - "tono": estilo narrativo
+#
+# Funcionamiento:
+# 1. Extrae los datos del JSON enviado por el cliente.
+# 2. Inicializa el cliente de la API de Gemini usando la clave guardada en las variables de entorno.
+# 3. Construye un mensaje de contexto detallado con instrucciones estrictas para el modelo:
+# 4. Envía este mensaje al modelo "gemini-2.5-flash".
+# 5. Devuelve la respuesta en formato JSON con la clave "cuento".
 @app.route("/generate", methods=["POST"])
 def generate_story():
     data = request.json
@@ -71,6 +94,22 @@ def generate_story():
     return jsonify({"cuento": response.text})
 
 # --- Endpoint para guardar interacción ---
+# Este endpoint recibe una solicitud POST en "/save_iteration" con un JSON que debe incluir:
+# - "personaje": protagonista del cuento
+# - "tema": tema central o ambientación
+# - "tono": estilo narrativo
+# - "cuento": el texto completo generado por la app
+# Funcionamiento:
+# 1. Extrae los datos del JSON enviado por el cliente.
+# 2. Obtiene la fecha y hora actual en formato "YYYY-MM-DD HH:MM:SS" para registrar cuándo se guardó 
+# la interacción.
+# 3. Se conecta a la base de datos PostgreSQL usando la variable de entorno DATABASE_URL.
+# 4. Crea la tabla dulces_suenos_IA si no existe
+# 5. Inserta los datos recibidos en la tabla.
+# 6. Cierra la conexión a la base de datos.
+# 7. Devuelve un JSON con {"status": "ok"} si la operación fue exitosa.
+# 8. En caso de error en cualquier paso de la conexión o inserción, captura la excepción, imprime el error 
+# en consola y devuelve un JSON con {"status": "error", "message": <mensaje del error>} con código HTTP 500.
 @app.route("/save_iteration", methods=["POST"])
 def save_iteration():
     data = request.json
@@ -107,6 +146,24 @@ def save_iteration():
         return jsonify({"status": "error", "message": str(e)}), 500
     
 
+# --- Endpoint para descargar cuento en PDF ---
+# Este endpoint recibe una solicitud POST en "/download_pdf" con un JSON que debe incluir:
+# - "theme": tema del cuento (opcional, por defecto "Sin tema")
+# - "character": personaje principal (opcional, por defecto "Sin personaje")
+# - "tone": tono o estilo narrativo (opcional, por defecto "Normal")
+# - "story": texto completo del cuento
+# Funcionamiento:
+# 1. Extrae los datos del JSON enviado por el cliente y asigna valores por defecto si algún campo no existe.
+# 2. Crea un buffer en memoria (io.BytesIO) que servirá para almacenar el PDF antes de enviarlo al cliente.
+# 3. Inicializa un documento A4 (SimpleDocTemplate) con márgenes definidos para todo el contenido.
+# 4. Obtiene los estilos de texto estándar (getSampleStyleSheet) y crea un estilo justificado (ParagraphStyle) 
+# con altura de línea adecuada para lectura cómoda.
+# 5. Construye la lista story_elements que contendrá los elementos del PDF
+# 6. Genera el PDF en el buffer usando doc.build(story_elements).
+# 7. Reposiciona el buffer al inicio (buffer.seek(0)) para que pueda ser leído desde el principio.
+# 8. Devuelve el archivo PDF al cliente mediante send_file
+# Resultado: el usuario recibe un PDF listo para descargar con el cuento formateado y los metadatos visibles 
+# (tema, personaje, tono).
 @app.route("/download_pdf", methods=["POST"])
 def download_pdf():
     data = request.get_json()
@@ -132,7 +189,7 @@ def download_pdf():
         'Justify',
         parent=styles['Normal'],
         alignment=TA_JUSTIFY,
-        leading=15  # altura de línea
+        leading=15 
     )
 
     story_elements = []
@@ -156,7 +213,15 @@ def download_pdf():
         mimetype="application/pdf"
     )
 
-
+# --- Bloque principal para ejecutar la aplicación Flask ---
+# Este bloque se ejecuta solo si el script se ejecuta directamente (python app.py) y no si se importa como módulo 
+# en otro script.
+# 1. Obtiene el puerto en el que correrá la app:
+# - Primero intenta leer la variable de entorno PORT (útil si se despliega en plataformas como Render, Heroku, etc.)
+# - Si no existe, usa el puerto 5000 por defecto.
+# 2. Llama a app.run() para iniciar el servidor Flask:
+# - host="0.0.0.0" permite que el servidor sea accesible desde cualquier IP, no solo localhost.
+# - port=port define el puerto donde escuchará la app.
 if __name__ == "__main__":
     port = int(os.environ.get("PORT", 5000))
     app.run(host="0.0.0.0", port=port)

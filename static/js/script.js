@@ -1,4 +1,5 @@
 // --- Utilidades y estado ---
+/* Se capturan referencias a todos los elementos del DOM que se van a usar */
   const charactersEl = document.getElementById('characters');
   const themeEl = document.getElementById('theme');
   const characterInputEl = document.getElementById('characterInput');
@@ -15,9 +16,10 @@
   const clearBtn = document.getElementById('clearBtn');
   const historyBtn = document.getElementById('historyBtn');
 
-  let utterance;
+  let utterance; // Objeto de la narración (Web Speech API)
 
   // --- Selección de personajes ---
+  /* Permite seleccionar un personaje haciendo click en los botones de la izquierda */
   charactersEl.addEventListener('click', (e)=>{
     const btn = e.target.closest('.char-btn');
     if(!btn) return;
@@ -27,10 +29,11 @@
   });
 
   // --- Loader ---
+  /* Muestra un estado de carga cuando se genera el cuento */
   function setLoading(on){
     if(on){
       generateBtn.disabled = true;
-      generateBtn.innerHTML = '<span class="loader"></span> Contando...';
+      generateBtn.innerHTML = '<span class="loader"></span> Contando...';// Icono animado
       statusEl.innerHTML = '';
     } else {
       generateBtn.disabled = false;
@@ -41,13 +44,13 @@
   // --- Contador ---
   function countWords(text){
     if(!text) return 0;
-    return text.trim().split(/\s+/).filter(Boolean).length;
+    return text.trim().split(/\s+/).filter(Boolean).length;// Cuenta palabras ignorando espacios extra
   }
 
   // --- Narración (Web Speech API) ---
   function narrar(texto) {
     if ('speechSynthesis' in window) {
-      speechSynthesis.cancel();
+      speechSynthesis.cancel(); // Detener narraciones anteriores
 
       utterance = new SpeechSynthesisUtterance(texto);
       utterance.lang = 'es-ES';
@@ -66,6 +69,7 @@
     }
   }
 
+  /* Pausar, reanudar y detener narración */
   function pausarNarracion() {
     if (speechSynthesis.speaking && !speechSynthesis.paused) {
       speechSynthesis.pause();
@@ -101,6 +105,7 @@
     ttsBtn.disabled = true;
 
     try{
+      /* Llamada al endpoint Flask para generar cuento */
       const payload = { tema: theme, personaje: character, tono: tone};
       const res = await fetch('/generate', {
         method: 'POST',
@@ -117,7 +122,7 @@
       const story = data.cuento || '';
 
       storyBox.textContent = story;
-      storyBox.scrollTop = 0;
+      storyBox.scrollTop = 0; // Scroll al inicio del cuento
 
       const wc = countWords(story);
       wordCountEl.textContent = 'Palabras: ' + wc;
@@ -138,6 +143,8 @@
     }
   }
 
+  
+  /* --- Guardar interacción en backend --- */
   async function saveStory(story, theme, character, tone) {
     try {
       await fetch('/save_iteration', {
@@ -164,6 +171,7 @@
         body: JSON.stringify({ theme, character, tone, story })
       });
       if (!res.ok) throw new Error('Error al generar PDF');
+      /* Crear link temporal para descargar */
       const blob = await res.blob();
       const url = window.URL.createObjectURL(blob);
       const a = document.createElement('a');
@@ -209,7 +217,7 @@
     stopBtn.disabled = true;
   });
 
-  // --- Limpiar ---
+  // --- Limpiar todo---
   clearBtn.addEventListener('click', () => {
     storyBox.textContent = 'Aquí aparecerá el cuento...';
     wordCountEl.textContent = 'Palabras: —';
@@ -220,9 +228,10 @@
     statusEl.innerHTML = '';
   });
 
-  // --- Eventos ---
+  // --- Eventos principales---
   generateBtn.addEventListener('click', generateStory);
 
+  /* Historial local opcional */
   if (historyBtn) {
     historyBtn.addEventListener('click', ()=>{
       const local = JSON.parse(localStorage.getItem('cc_history_v1')||'[]');
