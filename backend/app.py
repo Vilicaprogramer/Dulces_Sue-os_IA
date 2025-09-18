@@ -1,10 +1,3 @@
-from google import genai
-from google.genai import types
-
-from reportlab.platypus import SimpleDocTemplate, Paragraph, Spacer
-from reportlab.lib.styles import getSampleStyleSheet, ParagraphStyle
-from reportlab.lib.pagesizes import A4
-from reportlab.lib.enums import TA_JUSTIFY
 from flask import send_file, request
 import io
 
@@ -12,7 +5,6 @@ import io
 from flask import Flask, request, jsonify, send_file, send_from_directory
 from flask_cors import CORS
 from datetime import datetime
-import psycopg2
 import os
 
 # Configuración inicial de la aplicación Flask.
@@ -55,6 +47,8 @@ def home():
 # 5. Devuelve la respuesta en formato JSON con la clave "cuento".
 @app.route("/generate", methods=["POST"])
 def generate_story():
+    from google import genai
+    from google.genai import types
     data = request.json
     personaje = data.get("personaje")
     tema = data.get("tema")
@@ -112,6 +106,7 @@ def generate_story():
 # en consola y devuelve un JSON con {"status": "error", "message": <mensaje del error>} con código HTTP 500.
 @app.route("/save_iteration", methods=["POST"])
 def save_iteration():
+    import psycopg2
     data = request.json
     personaje = data.get("personaje")
     tema = data.get("tema")
@@ -166,6 +161,10 @@ def save_iteration():
 # (tema, personaje, tono).
 @app.route("/download_pdf", methods=["POST"])
 def download_pdf():
+    from reportlab.platypus import SimpleDocTemplate, Paragraph, Spacer
+    from reportlab.lib.styles import getSampleStyleSheet, ParagraphStyle
+    from reportlab.lib.pagesizes import A4
+    from reportlab.lib.enums import TA_JUSTIFY
     data = request.get_json()
     theme = data.get("theme", "Sin tema")
     character = data.get("character", "Sin personaje")
